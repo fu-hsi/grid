@@ -1,0 +1,70 @@
+$grid-gutter : 10px;
+$grid-columns : 12;
+
+$grid-push-enabled: false;
+$grid-pull-enabled: false;
+
+.clearfix:after {
+  clear: both;
+  content: "";
+  display: block;
+}
+
+.container:after, .row:after {
+  @extend .clearfix;
+}
+
+[class*="col-"] {
+  overflow: hidden;
+  padding: $grid-gutter;
+}
+
+.container > .row {
+  margin: 0 (-$grid-gutter);
+}
+
+[class*="col-"] > .row {
+    margin: (-$grid-gutter);
+}
+
+@mixin media($prefix, $minWidth: 480px) {
+
+  @media only screen and (min-width: $minWidth) {
+
+    $col: "col";
+    @if $prefix != "" {
+      $col: "col-#{$prefix}";
+    }
+  
+    [class*="#{$col}-"] {
+      float: left;
+      position: relative;
+    }
+
+    $value: 100% / $grid-columns;
+      
+    @for $i from 1 through $grid-columns {
+      .#{$col}-#{$i} { width: $value * $i }
+    }    
+
+    @if $grid-push-enabled == true {  
+        @for $i from 0 through $grid-columns - 1 {
+          .#{$col}-push-#{$i} { left: $value * $i }
+        }
+    }
+
+    @if $grid-pull-enabled == true {
+        [class*="#{$col}-pull-"] {
+          float: right !important;
+        }
+        
+        @for $i from 0 through $grid-columns - 1 {
+          .#{$col}-pull-#{$i} { right: $value * $i }
+        }
+    }
+    
+  }
+
+}
+
+@include media("", 480px);
